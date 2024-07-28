@@ -26,14 +26,19 @@ Oleh karena itu, sebuah sistem rekomendasi menjadi sebuah kebutuhan yang sangat 
 ## Data Understanding
 Data yang digunakan pada proyek ini diambil dari data The Movie Database (TMDb) yang didapat dari hasil generate The Movie Database API dimana pada dataset ini berisikan tentang 5000 film yang disajikan dalam sebuah dataset format CSV dengan berbagai macam variabel seperti ID film, judul film, cast, crew, dan lain-lain. 
 
+Selain itu, jumlah data yang digunakan pada proyek ini berjumlah 5000 data berupa film-film yang akan diolah dalam membuat sebuah sistem rekomendasi. Kondisi data yang digunakan pada proyek ini masih terlihat noise untuk dilatih dalam model rekomendasi dengan adanya beberapa variabel yang masih memiliki nilai null atau missing value. 
+
+Proyek ini menggunakan 2 dataset sebagai bahan dalam membuat sistem rekomendasi film ini, dimana 2 dataset ini digunakan untuk memprediksi peringkat atau preferensi yang akan diberikan pengguna pada suatu item.
+
 Dataset:
 [TMDB 5000 Movie Dataset](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata/data) & [Data Rating Film](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset?select=ratings_small.csv)  
 
-**Variabel-variabel pada TMDB 5000 Movie Dataset adalah sebagai berikut:**
+**Variabel-variabel pada dataset pertama adalah sebagai berikut:**
 - movie_id : merupakan id unik setiap film. 
-- title : merupakan nama atau judul pada film.
 - cast : merupakan variabel yang berisi informasi mengenai nama aktor dan karakter yang dimainkan.
 - crew : merupakan variabel yang berisi informasi mengenai sutradara film, produser, dan kru lainnya. 
+
+**Variabel-variabel pada dataset kedua adalah sebagai berikut:**
 - budget : merupakan anggaran produksi film (dolar AS).
 - genres : merupakan genre film seperti aksi, komedi, horror, dan sebagainya.
 - homepage : merupakan URL halaman web resmi film.
@@ -58,8 +63,6 @@ Dataset:
         'spoken_languages', 'status', 'tagline', 'title', 'vote_average',
         'vote_count', 'tittle', 'cast', 'crew'],
         dtype='object')
-
-## Data Preparation
 
 - **Melakukan pengecekan missing value pada dataset gabungan.** 
 
@@ -91,6 +94,8 @@ Dataset:
         cast                       0
         crew                       0
         dtype: int64
+
+## Data Preparation
 
 - **Membersihkan missing value dan mengecek kembali missing value pada dataset gabungan.**
 
@@ -130,19 +135,25 @@ Pada tahap ini, proyek ini menerapkan 2 model rekomendasi antara lain sebagai be
 
     Dalam model rekomendasi ini, fitur film (overview, cast, crew, keyword, dll) digunakan untuk menemukan kemiripannya dengan film lain. Kemudian film yang paling mungkin mirip akan direkomendasikan. 
 
-    **Kelebihan**: 
+    **Proses dan tahapan pembuatan model dengan content-based filtering:**
+
+        1. Melakukan pengecekan pada fitur 'overview' pada dataset gabungan. 
+
+        2. Menghitung vektor pada setiap 'overview' dengan menggunakan teknik Term Frequency-Inverse Document Frequency (TF-IDF). 
+           Ini akan memberikan sebuah matriks dimana setiap kolom mewakili sebuah kata dalam overview kosakata (semua kata yang muncul di setidaknya satu dokumen) dan 
+           setiap baris mewakili sebuah film, seperti sebelumnya, hal ini dilakukan untuk mengurangi pentingnya kata-kata yang sering muncul di overview plot dan 
+           oleh karena itu, pentingnya kata-kata tersebut dalam penghitungan nilai kemiripan akhir.
+
+        3. Cosine Similarity. 
+           Digunakan untuk menghitung kuantitas numerik yang menunjukkan kemiripan antara dua film dan menggunakan skor kemiripan kosinus karena 
+           skor ini tidak bergantung pada besaran dan relatif mudah dan cepat untuk dihitung.
+
+        4. Membuat reverse map dari index dan judul film. Hal ini bertujuan untuk memetakan judul film ke dalam indeks aslinya dalam dataset gabungan.
+
+        5. Membuat sebuah function untuk mendapatkan rekomendasi dengan mengembalikan data berupa top 10 film yang paling mirip dengan indeks aslinya. 
+
+        6. Mendapatkan rekomendasi film. 
         
-    - *Personalisasi Tinggi:* Rekomendasi sangat disesuaikan dengan preferensi individu berdasarkan karakteristik item yang sudah pernah disukai.
-    - *Tidak Membutuhkan Data Pengguna Lain:* Hanya membutuhkan informasi tentang item dan preferensi pengguna saat ini.
-    - *Mudah Diterapkan:* Relatif mudah untuk diimplementasikan dan dijelaskan secara intuitif.
-    - *Cocok untuk Item Baru:* Dapat merekomendasikan item baru yang belum memiliki rating dari pengguna lain.
-    
-    **Kekurangan**:
-
-    - *Cold Start Problem:* Sulit memberikan rekomendasi kepada pengguna baru yang belum memiliki sejarah interaksi.
-    - *Spektrum Rekomendasi Terbatas:* Rekomendasi cenderung terbatas pada item yang serupa dengan yang sudah pernah disukai, sehingga kurang mengeksplorasi item baru yang mungkin menarik.
-    - *Tergantung Kualitas Metadata:* Kualitas metadata item sangat berpengaruh pada akurasi rekomendasi.
-
     **Hasil Rekomendasi**:
 
         # Mendapatkan rekomendasi film yang mirip dengan Spider-Man 3
@@ -163,9 +174,56 @@ Pada tahap ini, proyek ini menerapkan 2 model rekomendasi antara lain sebagai be
         Name: title, dtype: object
 
 
+    **Kelebihan**: 
+        
+    - *Personalisasi Tinggi:* Rekomendasi sangat disesuaikan dengan preferensi individu berdasarkan karakteristik item yang sudah pernah disukai.
+    - *Tidak Membutuhkan Data Pengguna Lain:* Hanya membutuhkan informasi tentang item dan preferensi pengguna saat ini.
+    - *Mudah Diterapkan:* Relatif mudah untuk diimplementasikan dan dijelaskan secara intuitif.
+    - *Cocok untuk Item Baru:* Dapat merekomendasikan item baru yang belum memiliki rating dari pengguna lain.
+    
+    **Kekurangan**:
+
+    - *Cold Start Problem:* Sulit memberikan rekomendasi kepada pengguna baru yang belum memiliki sejarah interaksi.
+    - *Spektrum Rekomendasi Terbatas:* Rekomendasi cenderung terbatas pada item yang serupa dengan yang sudah pernah disukai, sehingga kurang mengeksplorasi item baru yang mungkin menarik.
+    - *Tergantung Kualitas Metadata:* Kualitas metadata item sangat berpengaruh pada akurasi rekomendasi.
+
 - **Model Development dengan Collaborative Filtering.** 
 
     Dalam sistem rekomendasi ini, model akan merekomendasikan film-film yang mirip dengan preferensi pengguna di masa lalu.
+
+    **Proses dan tahapan pembuatan model dengan collborative filtering:**
+
+    **Data Understanding:**
+
+        1. Mengupload file rating_smalls.csv untuk dijadikan pertimbangan sebagai item dari user berupa rating dari user terhadap film. 
+
+        2. Import Library yang dibutuhkan untuk membuat dan melatih model rekomendasi.
+
+    **Data Preparation:**
+
+        1. Menginisialisasi dataframe dari dataset rating. 
+
+        2. Menyandikan data-data yang ada pada fitur 'userId' dan fitur 'movieId' ke dalam indeks integer.
+
+        3. Melakukan mapping pada userId dan movieId ke datafram yang berkaitan yaitu 'user' dan 'movie'. 
+
+        4. Mengecek jumlah user, jumlah movie, nilai minimum rating, dan nilai maksimum rating. 
+        
+    **Membagi Data untuk Training dan Validasi:**
+
+        1. Mengacak dataset untuk distribusi menjadi random.
+
+        2. Membagi dataset menjadi data train dan data validasi dengan rasio 80%:20%.
+
+    **Proses Training:**
+
+        1. Membuat class RecommenderNet dengan Keras Model Class. 
+
+        2. Melakukan proses compile pada model yang telah dibuat.
+
+        3. Melakukan training pada model rekomendasi.
+
+        4. Mendapatkan rekomendasi film berupa "Top 10 Movies Recommendation". 
 
     **Kelebihan**:
 
@@ -204,7 +262,7 @@ Pada tahap ini, proyek ini menerapkan 2 model rekomendasi antara lain sebagai be
 
 ## Evaluation
 
-Tahap evaluasi model pada proyek Predictive Analytics ini menggunakan metrik Root Mean Squared Error (RMSE).
+Tahap evaluasi metrik pada proyek Sistem Rekomendasi ini menggunakan metrik Root Mean Squared Error (RMSE). 
 
 **Penjelasan Metrik Evaluasi**
 
@@ -226,9 +284,9 @@ Dimana:
 
 **Visualisasi Metrik Root Mean Squared Error (RMSE)**
 
-![Metriks RMSE](https://github.com/user-attachments/assets/86d9ee32-80b6-410d-8f1f-d2c0391d8118)
+![Metrik RMSE](https://github.com/user-attachments/assets/86d9ee32-80b6-410d-8f1f-d2c0391d8118)
 
-Berdasarkan metrik evaluasi diatas, model telah dilatih untuk menerapkan sistem rekomendasi dengan memberikan rekomendasi film berupa "Top 10 Rekomendasi Film" seperti yang telah dijabarkan pada output dalam tahap Modeling. 
+Proses training model cukup smooth dan model konvergen pada epochs sekitar 100. Dari proses ini, dapat diperoleh nilai error akhir sebesar sekitar 0.18 dan error pada data validasi sebesar 0.21. Nilai tersebut cukup bagus untuk sistem rekomendasi dalam memberikan rekomendasi film kepada pengguna. 
 
 **Kesimpulan**
 
