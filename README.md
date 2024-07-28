@@ -217,7 +217,7 @@ Root Mean Squared Error (RMSE) adalah metrik evaluasi yang umum digunakan untuk 
 - Hitung Rata-rata: Hitung rata-rata dari semua kuadrat selisih.
 - Akar Kuadrat: Ambil akar kuadrat dari rata-rata kuadrat selisih. Hasilnya adalah RMSE.
 
-![Rumus RMSE]()
+![Rumus RMSE](https://github.com/user-attachments/assets/a6c07ba0-2e0e-4829-b08d-44c34dae4d6b)
 
 Dimana: 
 - yi: Rating aktual dari pengguna i untuk item j
@@ -226,7 +226,7 @@ Dimana:
 
 **Visualisasi Metrik Root Mean Squared Error (RMSE)**
 
-![Metrik RMSE]()
+![Metriks RMSE](https://github.com/user-attachments/assets/86d9ee32-80b6-410d-8f1f-d2c0391d8118)
 
 Berdasarkan metrik evaluasi diatas, model telah dilatih untuk menerapkan sistem rekomendasi dengan memberikan rekomendasi film berupa "Top 10 Rekomendasi Film" seperti yang telah dijabarkan pada output dalam tahap Modeling. 
 
