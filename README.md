@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Dalam era digital saat ini, konsumsi konten film semakin meningkat pesat. Seiring dengan itu, jumlah platform streaming dan film yang tersedia juga terus bertambah. Hal ini menyebabkan kelebihan informasi yang membuat pengguna kesulitan menemukan film yang sesuai dengan minat dan preferensi mereka. Kurangnya personalisasi dalam rekomendasi film juga menjadi masalah umum, di mana pengguna seringkali mendapatkan saran film yang tidak relevan. [1]
+Dalam era digital saat ini, konsumsi konten film semakin meningkat pesat. Seiring dengan itu, jumlah platform streaming dan film yang tersedia juga terus bertambah. Hal ini menyebabkan kelebihan informasi yang membuat pengguna kesulitan menemukan film yang sesuai dengan minat dan preferensi mereka. Kurangnya personalisasi dalam rekomendasi film juga menjadi masalah umum, di mana pengguna seringkali mendapatkan saran film yang tidak relevan. **[1]**
 
 Pengguna saat ini menginginkan pengalaman yang lebih personal dan efisien. Mereka tidak ingin menghabiskan waktu berjam-jam untuk mencari film yang tepat. Di sinilah peran sistem rekomendasi film menjadi sangat krusial.
 
@@ -11,7 +11,7 @@ Oleh karena itu, sebuah sistem rekomendasi menjadi sebuah kebutuhan yang sangat 
 
 Referensi: 
 
-[1] [Agustian, E. R., Munir, D., & Nugroho, E. P. (2020). Sistem Rekomendasi Film Menggunakan Metode Collaborative Filtering dan K-Nearest Neighbors. Jurnal Aplikasi Dan Teori Ilmu Komputer, 3(1), 18–21](https://ejournal.upi.edu/index.php/JATIKOM/article/view/33208/).
+**[1]** [Agustian, E. R., Munir, D., & Nugroho, E. P. (2020). Sistem Rekomendasi Film Menggunakan Metode Collaborative Filtering dan K-Nearest Neighbors. Jurnal Aplikasi Dan Teori Ilmu Komputer, 3(1), 18–21](https://ejournal.upi.edu/index.php/JATIKOM/article/view/33208/).
 
 ## Business Understanding
 
@@ -29,12 +29,11 @@ Referensi:
 ## Data Understanding
 Data yang digunakan pada proyek ini diambil dari data The Movie Database (TMDb) yang didapat dari hasil generate The Movie Database API dimana pada dataset ini berisikan tentang 5000 film yang disajikan dalam sebuah dataset format CSV dengan berbagai macam variabel seperti ID film, judul film, cast, crew, dan lain-lain. 
 
-
 Proyek ini menggunakan 2 dataset sebagai bahan dalam membuat sistem rekomendasi film ini, dimana 2 dataset ini digunakan untuk memprediksi peringkat atau preferensi yang akan diberikan pengguna pada suatu item.
 
-Pada dataset TMDB 5000 Movie Dataset, jumlah data yang digunakan pada proyek ini dari dataset tersebut berjumlah 5000 data berupa film-film yang akan diolah dalam membuat sebuah sistem rekomendasi. Kondisi data yang digunakan pada proyek ini masih terlihat noise untuk dilatih dalam model rekomendasi dengan adanya beberapa variabel yang masih memiliki nilai null atau missing value. 
+Pada dataset TMDB 5000 Movie Dataset, jumlah data yang digunakan pada proyek ini dari dataset tersebut berjumlah **5000 data dengan matriks baris dan kolom sebanyak 5000 baris dan 24 kolom** yang berupa film-film yang akan diolah dalam membuat sebuah sistem rekomendasi. Kondisi data yang digunakan pada proyek ini masih terlihat **noise** untuk dilatih dalam model rekomendasi dengan adanya beberapa variabel yang masih memiliki **nilai null atau missing value**. 
 
-Sedangkan, pada Dataset Rating Film, jumlah data yang digunakan berkisar 100.000 data rating yang dari 700 pengguna dalam 9000 film. Dataset ini menjadi bahan perbandingan dengan fitur 'id' pada dataset TMDB 5000 Movie Dataset dalam membuat Model dengan Collaborative Filtering. Dataset ini tidak memiliki nilai null atau missing value dari setiap fitur atau variabelnya. 
+Sedangkan, pada Dataset Rating Film, jumlah data yang digunakan berkisar **100.000 data rating yang dari 700 pengguna dalam 9000 film**. Dataset ini menjadi bahan perbandingan dengan fitur 'id' pada dataset TMDB 5000 Movie Dataset dalam membuat Model dengan Collaborative Filtering. Dataset ini **tidak memiliki nilai null atau missing value** dari setiap fitur atau variabelnya. Jumlah baris dan kolom pada dataset ini berkisar **100000 baris yang mewakili rating pengguna dan 4 kolom**. 
 
 Dataset:
 [TMDB 5000 Movie Dataset](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata/data) & [Dataset Rating Film](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset?select=ratings_small.csv)  
@@ -64,8 +63,10 @@ Dataset:
 
 **Exploratory Data Analysis (EDA)**
 
-- Melakukan penggabungan data antara pada kolom id dalam dataset TMDB 5000 Movie Dataset. 
+- Melakukan penggabungan data pada kolom id dalam dataset TMDB 5000 Movie Dataset. 
     
+    Penggabungan data pada kolom id digunakan untuk mendapatkan keseluruhan data yang ada pada file credits dan file movie pada dataset TMDB 5000 Movie Dataset. 
+
     Output:
     
         Index(['budget', 'genres', 'homepage', 'id', 'keywords', 'original_language',
@@ -108,7 +109,6 @@ Dataset:
 
 ## Data Preparation
 
-#### Data Preparation untuk Pelatihan Model Content-Based Filtering:
 - **Membersihkan missing value dan mengecek kembali missing value pada dataset gabungan.**
 
     Melakukan pembersihan missing value pada dataset merupakan suatu tahapan yang diperlukan agar data yang akan dilatih model pada sistem rekomendasi memiliki data yang lengkap dan akurat. Pembersihan missing value ini dilakukan agar tidak akan menimbulkan noise dalam data sehingga model yang akan dilatih dapat fokus pada informasi yang relevan. 
@@ -140,143 +140,233 @@ Dataset:
         crew                    0
         dtype: int64
 
+#### Data Preparation untuk Pelatihan Model Content-Based Filtering:
+
+- **Mengecek fitur 'overview' pada dataset gabungan.**
+
+    Melakukan pengecekan fitur overview untuk dilakukan vektorisasi. 
+
+        Output:
+        0    In the 22nd century, a paraplegic Marine is di...
+        1    Captain Barbossa, long believed to be dead, ha...
+        2    A cryptic message from Bond’s past sends him o...
+        3    Following the death of District Attorney Harve...
+        4    John Carter is a war-weary, former military ca...
+        Name: overview, dtype: object
+
+- **Menghitung vektor pada setiap 'overview' dengan menggunakan teknik Term Frequency-Inverse Document Frequency (TF-IDF).** 
+    
+    Ini akan memberikan sebuah matriks dimana setiap kolom mewakili sebuah kata dalam overview kosakata (semua kata yang muncul di setidaknya satu dokumen) dan setiap baris mewakili sebuah film, seperti sebelumnya, hal ini dilakukan untuk mengurangi pentingnya kata-kata yang sering muncul di overview plot dan oleh karena itu, pentingnya kata-kata tersebut dalam penghitungan nilai kemiripan akhir.
+
+- **Membuat reverse map dari indeks dan judul film.**
+
+    Hal ini merupakan tahapan yang bertujuan untuk memetakan judul film pada indeks aslinya. 
+
 #### Data Preparation untuk Pelatihan Model Collaborative Filtering:
 - **Menginisialisasi dataframe dari dataset rating.** 
+
+    Melakukan inisialisasi dataframe yang diambil dari dataset rating untuk pembuatan model rekomendasi dengan menyandikan fitur, melakukan mapping, dan membagi dataset menjadi data train dan data validasi.
+
 - **Menyandikan data-data yang ada pada fitur 'userId' dan fitur 'movieId' ke dalam indeks integer.**
-- **Melakukan mapping pada userId dan movieId ke datafram yang berkaitan yaitu 'user' dan 'movie'.** 
-- **Mengecek jumlah user, jumlah movie, nilai minimum rating, dan nilai maksimum rating.** 
+
+    Hal ini bertujuan untuk mengubah data-data pada fitur userId dan movieId yang bertipe object menjadi data numerik agar model dapat dengan mudah mempelajari setiap data. 
+
+        Output encoding fitur userId:
+        list userId:  [1, 2, 3, 4, 5, dst]
+        encoded userId :  {1: 0, 2: 1, 3: 2, 4: 3, 5: 4, dst}
+        encoded angka ke userId:  {0: 1, 1: 2, 2: 3, 3: 4, 4: 5, 5: 6, dst}
+
+        Output encoding fitur movieId:
+        list movieId:  [31, 1029, 1061, 1129, 1172, dst]
+        encoded movieId :  {31: 0, 1029: 1, 1061: 2, 1129: 3, 1172: 4, dst}
+        encoded angka ke movieId:  {0: 31, 1: 1029, 2: 1061, 3: 1129, 4: 1172, dst}
+
+- **Melakukan mapping pada userId dan movieId ke dataframe yang berkaitan yaitu 'user' dan 'movie'.** 
+
+    Mapping dilakukan dengan memetakan userId dan movieId ke dalam dataframe yang berkaitan seperti 'user' dan 'movie' untuk mempermudah pengenalan terhadap setiap fitur tersebut. 
+
+- **Mengecek jumlah user, jumlah movie, nilai minimum rating, dan nilai maksimum rating.**
+
+    Melakukan pengecekan terhadap jumlah user, jumlah movie, nilai minimum rating, dan nilai maksimum rating seperti output berikut:
+
+        Output:
+        671
+        9066
+        Number of User: 671, Number of Movie: 9066, Min Rating: 0.5, Max Rating: 5.0
 
 ## Modeling
 Pada tahap ini, proyek ini menerapkan 2 model rekomendasi antara lain sebagai berikut:
 
-- **Model Development dengan Content-Based Filtering.** 
+### Model Development dengan Cosine Similarity
 
-    Dalam model rekomendasi ini, fitur film (overview, cast, crew, keyword, dll) digunakan untuk menemukan kemiripannya dengan film lain. Kemudian film yang paling mungkin mirip akan direkomendasikan. 
+#### Dalam model rekomendasi ini, fitur film (overview, cast, crew, keyword, dll) digunakan untuk menemukan kemiripannya dengan film lain. Kemudian film yang paling mungkin mirip akan direkomendasikan.
 
-    **Proses dan tahapan pembuatan model dengan content-based filtering:**
+**Proses dan tahapan pembuatan model dengan cosine similarity:**
 
-        1. Melakukan pengecekan pada fitur 'overview' pada dataset gabungan. 
+    1. Melakukan pengecekan pada fitur 'overview' pada dataset gabungan. 
 
-        2. Menghitung vektor pada setiap 'overview' dengan menggunakan teknik Term Frequency-Inverse Document Frequency (TF-IDF). 
-           Ini akan memberikan sebuah matriks dimana setiap kolom mewakili sebuah kata dalam overview kosakata (semua kata yang muncul di setidaknya satu dokumen) dan 
-           setiap baris mewakili sebuah film, seperti sebelumnya, hal ini dilakukan untuk mengurangi pentingnya kata-kata yang sering muncul di overview plot dan 
-           oleh karena itu, pentingnya kata-kata tersebut dalam penghitungan nilai kemiripan akhir.
+    2. Menghitung vektor pada setiap 'overview' dengan menggunakan teknik Term Frequency-Inverse Document Frequency (TF-IDF). 
+       Ini akan memberikan sebuah matriks dimana setiap kolom mewakili sebuah kata dalam overview kosakata (semua kata yang muncul di setidaknya satu dokumen) dan 
+       setiap baris mewakili sebuah film, seperti sebelumnya, hal ini dilakukan untuk mengurangi pentingnya kata-kata yang sering muncul di overview plot dan 
+       oleh karena itu, pentingnya kata-kata tersebut dalam penghitungan nilai kemiripan akhir.
 
-        3. Cosine Similarity. 
-           Digunakan untuk menghitung kuantitas numerik yang menunjukkan kemiripan antara dua film dan menggunakan skor kemiripan kosinus karena 
-           skor ini tidak bergantung pada besaran dan relatif mudah dan cepat untuk dihitung.
+       Output ukuran matriks setelah melakukan vektorisasi dengan TF-IDF:
 
-        4. Membuat reverse map dari index dan judul film. Hal ini bertujuan untuk memetakan judul film ke dalam indeks aslinya dalam dataset gabungan.
+       (4803, 20978)
 
-        5. Membuat sebuah function untuk mendapatkan rekomendasi dengan mengembalikan data berupa top 10 film yang paling mirip dengan indeks aslinya. 
-
-        6. Mendapatkan rekomendasi film. 
-        
-    **Hasil Rekomendasi**:
-
-        # Mendapatkan rekomendasi film yang mirip dengan Spider-Man 3
-        film_recommendations('The Dark Knight Rises')
+    3. Cosine Similarity. 
+        Digunakan untuk menghitung kuantitas numerik yang menunjukkan kemiripan antara dua film dan menggunakan skor kemiripan kosinus karena 
+        skor ini tidak bergantung pada besaran dan relatif mudah dan cepat untuk dihitung.
 
         Output:
 
-        65                         The Dark Knight
-        119                          Batman Begins
-        9       Batman v Superman: Dawn of Justice
-        2193                  Secret in Their Eyes
-        1398                             Max Payne
-        979                    Free State of Jones
-        2416                               Beastly
-        2274                              Survivor
-        790                        American Sniper
-        4649                       Shotgun Stories
-        Name: title, dtype: object
+        array([[1.        , 0.        , 0.        , ..., 0.        , 0.        ,
+                   0.        ],
+               [0.        , 1.        , 0.        , ..., 0.02160533, 0.        ,
+                   0.        ],
+               [0.        , 0.        , 1.        , ..., 0.01488159, 0.        ,
+                   0.        ],
+               ...,
+               [0.        , 0.02160533, 0.01488159, ..., 1.        , 0.01609091,
+                   0.00701914],
+               [0.        , 0.        , 0.        , ..., 0.01609091, 1.        ,
+                   0.01171696],
+               [0.        , 0.        , 0.        , ..., 0.00701914, 0.01171696,
+                   1.        ]])
 
+    4. Membuat reverse map dari index dan judul film. Hal ini bertujuan untuk memetakan judul film ke dalam indeks aslinya dalam dataset gabungan.
 
-    **Kelebihan**: 
-        
-    - *Personalisasi Tinggi:* Rekomendasi sangat disesuaikan dengan preferensi individu berdasarkan karakteristik item yang sudah pernah disukai.
-    - *Tidak Membutuhkan Data Pengguna Lain:* Hanya membutuhkan informasi tentang item dan preferensi pengguna saat ini.
-    - *Mudah Diterapkan:* Relatif mudah untuk diimplementasikan dan dijelaskan secara intuitif.
-    - *Cocok untuk Item Baru:* Dapat merekomendasikan item baru yang belum memiliki rating dari pengguna lain.
+    5. Membuat sebuah function untuk mendapatkan rekomendasi dengan mengembalikan data berupa top 10 film yang paling mirip dengan indeks aslinya. 
+
+    6. Mendapatkan rekomendasi film. 
+
+**Parameter Cosine Similarity:**
+
+ 
+**Hasil Rekomendasi:**
+
+    # Mendapatkan rekomendasi film yang mirip dengan The Dark Knight Rises
+    film_recommendations('The Dark Knight Rises')
+
+    Output:
+
+    65                              The Dark Knight
+    299                              Batman Forever
+    428                              Batman Returns
+    1359                                     Batman
+    3854    Batman: The Dark Knight Returns, Part 2
+    119                               Batman Begins
+    2507                                  Slow Burn
+    9            Batman v Superman: Dawn of Justice
+    1181                                        JFK
+    210                              Batman & Robin
+    Name: title, dtype: object
+
+**Kelebihan**: 
     
-    **Kekurangan**:
+- Intuitif dan Mudah Dipelajari: Konsep cosine similarity cukup mudah dipahami, yaitu mengukur kemiripan antara dua vektor berdasarkan sudut antara keduanya. Ini membuatnya menjadi model yang populer dan sering digunakan.
+- Efisien Komputasi: Perhitungan cosine similarity relatif cepat, terutama untuk dataset yang besar.
+- Performa Baik untuk Data Sparse: Model ini bekerja dengan baik pada data yang memiliki banyak nilai nol (sparse), seperti matriks rating film di mana sebagian besar pengguna belum memberikan rating untuk semua film.
+- Menangkap Kemiripan Berdasarkan Pola: Cosine similarity tidak hanya melihat nilai rating yang sama, tetapi juga pola keseluruhan dari rating yang diberikan oleh pengguna. Misalnya, dua pengguna yang memberikan rating tinggi pada film-film genre yang sama akan dianggap memiliki kesamaan yang tinggi.
 
-    - *Cold Start Problem:* Sulit memberikan rekomendasi kepada pengguna baru yang belum memiliki sejarah interaksi.
-    - *Spektrum Rekomendasi Terbatas:* Rekomendasi cenderung terbatas pada item yang serupa dengan yang sudah pernah disukai, sehingga kurang mengeksplorasi item baru yang mungkin menarik.
-    - *Tergantung Kualitas Metadata:* Kualitas metadata item sangat berpengaruh pada akurasi rekomendasi.
+**Kekurangan**:
 
-- **Model Development dengan Collaborative Filtering.** 
+- Tidak Memperhatikan Nilai Absolut Rating: Model ini hanya memperhatikan arah vektor, bukan panjangnya. Artinya, perbedaan besar dalam nilai rating (misalnya, rating 1 vs 5) dianggap sama pentingnya dengan perbedaan kecil (misalnya, rating 4 vs 5).
+- Tidak Mempertimbangkan Konteks: Cosine similarity tidak mempertimbangkan konteks di mana rating diberikan. Misalnya, seorang pengguna yang baru saja menonton banyak film aksi mungkin akan memberikan rating yang lebih tinggi untuk film aksi berikutnya, terlepas dari kualitas sebenarnya dari film tersebut.
+- Asumsi Kemerdekaan Fitur: Model ini mengasumsikan bahwa setiap fitur (dalam hal ini, setiap film) adalah independen. Padahal, dalam kenyataannya, film-film seringkali memiliki keterkaitan (misalnya, film sekuel, film yang dibintangi aktor yang sama).
+- Sensitif terhadap Normalisasi: Hasil perhitungan cosine similarity dapat sangat dipengaruhi oleh cara data dinormalisasi.
 
-    Dalam sistem rekomendasi ini, model akan merekomendasikan film-film yang mirip dengan preferensi pengguna di masa lalu.
+### Model Development dengan Keras (RecommenderNet) 
 
-    **Proses dan tahapan pembuatan model dengan collborative filtering:**
+#### Dalam sistem rekomendasi ini, model akan merekomendasikan film-film yang mirip dengan preferensi pengguna di masa lalu.
 
-    **Data Understanding:**
+**Proses dan tahapan pembuatan model dengan collborative filtering:**
+    
+    1. Mengacak dataset. Hal ini dilakukan agar distribusinya menjadi random. 
 
-        1. Mengupload file rating_smalls.csv untuk dijadikan pertimbangan sebagai item dari user berupa rating dari user terhadap film. 
+    2. Membagi dataset menjadi data train dan data validasi. Pembagian dataset menjadi data train dan data validasi dilakukan dengan rasio 80% data train dan 20% data validasi. 
 
-        2. Import Library yang dibutuhkan untuk membuat dan melatih model rekomendasi.
+    3. Membuat class RecommenderNet dengan Keras Model Class. 
 
-    **Data Preparation:**
+       Parameter yang digunakan pada pembuatan Model Keras (RecommenderNet):
 
-        1. Menginisialisasi dataframe dari dataset rating. 
+       - num_users, num_movie: Jumlah pengguna dan film dalam dataset.
+       - embedding_size: Dimensi ruang embedding.
+       - embeddings_initializer: Inisialisasi bobot embedding.
+       - embeddings_regularizer: Regularisasi untuk mencegah overfitting.
 
-        2. Menyandikan data-data yang ada pada fitur 'userId' dan fitur 'movieId' ke dalam indeks integer.
+    4. Melakukan proses compile pada model yang telah dibuat.
+    
+       Model ini menggunakan Binary Crossentropy untuk menghitung loss function, Adam (Adaptive Moment Estimation) sebagai optimizer, dan root mean squared error (RMSE) sebagai metrics evaluation. 
 
-        3. Melakukan mapping pada userId dan movieId ke datafram yang berkaitan yaitu 'user' dan 'movie'. 
+    5. Melakukan training pada model rekomendasi.
 
-        4. Mengecek jumlah user, jumlah movie, nilai minimum rating, dan nilai maksimum rating. 
-        
-    **Membagi Data untuk Training dan Validasi:**
+       Output: 
 
-        1. Mengacak dataset untuk distribusi menjadi random.
+       Epoch 90/100
+       10001/10001 [==============================] - 56s 6ms/step - loss: 0.5793 - root_mean_squared_error: 0.1813 - val_loss: 0.6059 - val_root_mean_squared_error: 0.2071
+       Epoch 91/100
+       10001/10001 [==============================] - 56s 6ms/step - loss: 0.5795 - root_mean_squared_error: 0.1816 - val_loss: 0.6059 - val_root_mean_squared_error: 0.2070
+       Epoch 92/100
+       10001/10001 [==============================] - 51s 5ms/step - loss: 0.5794 - root_mean_squared_error: 0.1815 - val_loss: 0.6058 - val_root_mean_squared_error: 0.2069
+       Epoch 93/100
+       10001/10001 [==============================] - 55s 5ms/step - loss: 0.5794 - root_mean_squared_error: 0.1815 - val_loss: 0.6059 - val_root_mean_squared_error: 0.2069
+       Epoch 94/100
+       10001/10001 [==============================] - 50s 5ms/step - loss: 0.5794 - root_mean_squared_error: 0.1814 - val_loss: 0.6056 - val_root_mean_squared_error: 0.2068
+       Epoch 95/100
+       10001/10001 [==============================] - 52s 5ms/step - loss: 0.5791 - root_mean_squared_error: 0.1811 - val_loss: 0.6055 - val_root_mean_squared_error: 0.2065
+       Epoch 96/100
+       10001/10001 [==============================] - 52s 5ms/step - loss: 0.5795 - root_mean_squared_error: 0.1816 - val_loss: 0.6059 - val_root_mean_squared_error: 0.2070
+       Epoch 97/100
+       10001/10001 [==============================] - 51s 5ms/step - loss: 0.5795 - root_mean_squared_error: 0.1814 - val_loss: 0.6062 - val_root_mean_squared_error: 0.2073
+       Epoch 98/100
+       10001/10001 [==============================] - 50s 5ms/step - loss: 0.5792 - root_mean_squared_error: 0.1813 - val_loss: 0.6061 - val_root_mean_squared_error: 0.2072
+       Epoch 99/100
+       10001/10001 [==============================] - 51s 5ms/step - loss: 0.5792 - root_mean_squared_error: 0.1812 - val_loss: 0.6064 - val_root_mean_squared_error: 0.2074
+       Epoch 100/100
+       10001/10001 [==============================] - 55s 6ms/step - loss: 0.5796 - root_mean_squared_error: 0.1817 - val_loss: 0.6066 - val_root_mean_squared_error: 0.2076
 
-        2. Membagi dataset menjadi data train dan data validasi dengan rasio 80%:20%.
+    6. Mendapatkan rekomendasi film berupa "Top 10 Movies Recommendation". 
 
-    **Proses Training:**
 
-        1. Membuat class RecommenderNet dengan Keras Model Class. 
+**Hasil Rekomendasi**:
 
-        2. Melakukan proses compile pada model yang telah dibuat.
+    Output:
 
-        3. Melakukan training pada model rekomendasi.
+    9/9 [==============================] - 0s 2ms/step
+    Showing recommendations for users: 500
+    ===========================
+    Movie with high ratings from user
+    --------------------------------
+    --------------------------------
+    Top 10 movie recommendation
+    --------------------------------
+    Spider-Man 3
+    Speed Racer
+    Ice Age: The Meltdown
+    Changeling
+    You, Me and Dupree
+    Love in the Time of Cholera
+    1408
+    The Helpers
+    Before Sunset
+    Orgazmo
 
-        4. Mendapatkan rekomendasi film berupa "Top 10 Movies Recommendation". 
+**Kelebihan**:
 
-    **Kelebihan**:
+- Fleksibilitas: Model keras menawarkan fleksibilitas yang tinggi dalam desain arsitektur. Anda dapat dengan mudah menggabungkan berbagai lapisan (layer) seperti embedding, fully connected, dan convolutional untuk menangkap berbagai pola kompleks dalam data.
+- Kinerja Tinggi: Dengan memanfaatkan kekuatan komputasi GPU dan library deep learning seperti TensorFlow atau Keras, model keras dapat melatih model yang besar dan kompleks dalam waktu yang relatif singkat.
+- Penanganan Data Sparse: Model keras dapat menangani data yang sparse dengan baik, seperti matriks rating film yang memiliki banyak nilai yang hilang. Teknik seperti embedding layer dapat membantu mengatasi masalah ini.
+- Pembelajaran Fitur Otomatis: Model keras dapat belajar fitur-fitur laten yang relevan secara otomatis dari data, tanpa perlu melakukan feature engineering secara manual.
+- Integrasi dengan Informasi Tambahan: Model keras dapat dengan mudah mengintegrasikan informasi tambahan seperti genre film, aktor, atau profil pengguna untuk meningkatkan kualitas rekomendasi.
 
-    - *Rekomendasi Berdasarkan Kesamaan Preferensi:* Mampu menemukan pola yang lebih kompleks dalam preferensi pengguna, sehingga rekomendasi lebih akurat.
-    - *Mengatasi Cold Start Problem:* Dapat memberikan rekomendasi kepada pengguna baru berdasarkan kesamaan dengan pengguna lain yang memiliki sejarah interaksi.
-    - *Menemukan Item yang Tidak Terduga:* Mampu merekomendasikan item yang tidak memiliki kesamaan fitur dengan item yang sudah pernah disukai, namun mungkin menarik bagi pengguna.
+**Kekurangan**:
 
-    **Kekurangan**:
-
-    - *Sparsity Problem:* Jika data interaksi pengguna sangat jarang, model akan kesulitan menemukan pola yang signifikan.
-    - *Scalability:* Model bisa menjadi kompleks dan lambat untuk dilatih ketika jumlah pengguna dan item sangat besar.
-    - *Tidak Menjelaskan Alasan Rekomendasi:* Sulit untuk menjelaskan mengapa suatu item direkomendasikan, sehingga kurang transparan.
-
-    **Hasil Rekomendasi**:
-
-        Output:
-
-        9/9 [==============================] - 0s 2ms/step
-        Showing recommendations for users: 500
-        ===========================
-        Movie with high ratings from user
-        --------------------------------
-        --------------------------------
-        Top 10 movie recommendation
-        --------------------------------
-        Spider-Man 3
-        Speed Racer
-        Ice Age: The Meltdown
-        Changeling
-        You, Me and Dupree
-        Love in the Time of Cholera
-        1408
-        The Helpers
-        Before Sunset
-        Orgazmo
+- Kompleksitas: Model keras seringkali membutuhkan lebih banyak data dan sumber daya komputasi dibandingkan model yang lebih sederhana seperti matrix factorization.
+- Overfitting: Model keras rentan terhadap overfitting, terutama jika data pelatihan tidak cukup banyak atau jika model terlalu kompleks. Teknik regularisasi seperti dropout dan L1/L2 regularization dapat membantu mengatasi masalah ini.
+- Interpretasi: Model keras yang kompleks sulit diinterpretasi, sehingga sulit untuk memahami alasan di balik rekomendasi yang diberikan.
+- Waktu Pelatihan: Pelatihan model keras dapat memakan waktu yang cukup lama, terutama untuk dataset yang besar.
+- Hyperparameter Tuning: Menentukan nilai hyperparameter yang optimal untuk model keras dapat menjadi tugas yang menantang dan memakan waktu.
 
 ## Evaluation
 
@@ -285,7 +375,6 @@ Pada tahap ini, proyek ini menerapkan 2 model rekomendasi antara lain sebagai be
 Tahap evaluasi model ini menggunakan metrik presisi (precision metric).
 
 **Penjelasan Metrik Evaluasi**
-
 Metrik Presisi (Precision Metric) melakukan perbandingan antara rekomendasi film yang relevan dan rekomendasi yang diberikan sistem. Untuk jelasnya, bisa diliat rumus daripada Presisi Sistem Rekomendasi berikut ini:  
 
 ![Rumus Presisi](https://github.com/user-attachments/assets/83777201-c68b-45dd-a23d-5dc85e2df07d)
