@@ -285,6 +285,7 @@ Pada tahap ini, proyek ini menerapkan 2 model rekomendasi antara lain sebagai be
 Tahap evaluasi model ini menggunakan metrik presisi (precision metric).
 
 **Penjelasan Metrik Evaluasi**
+
 Metrik Presisi (Precision Metric) melakukan perbandingan antara rekomendasi film yang relevan dan rekomendasi yang diberikan sistem. Untuk jelasnya, bisa diliat rumus daripada Presisi Sistem Rekomendasi berikut ini:  
 
 ![Rumus Presisi](https://github.com/user-attachments/assets/83777201-c68b-45dd-a23d-5dc85e2df07d)
