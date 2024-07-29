@@ -2,13 +2,16 @@
 
 ## Project Overview
 
-Dalam era digital saat ini, konsumsi konten film semakin meningkat pesat. Seiring dengan itu, jumlah platform streaming dan film yang tersedia juga terus bertambah. Hal ini menyebabkan kelebihan informasi yang membuat pengguna kesulitan menemukan film yang sesuai dengan minat dan preferensi mereka. Kurangnya personalisasi dalam rekomendasi film juga menjadi masalah umum, di mana pengguna seringkali mendapatkan saran film yang tidak relevan.
+Dalam era digital saat ini, konsumsi konten film semakin meningkat pesat. Seiring dengan itu, jumlah platform streaming dan film yang tersedia juga terus bertambah. Hal ini menyebabkan kelebihan informasi yang membuat pengguna kesulitan menemukan film yang sesuai dengan minat dan preferensi mereka. Kurangnya personalisasi dalam rekomendasi film juga menjadi masalah umum, di mana pengguna seringkali mendapatkan saran film yang tidak relevan. [1]
 
 Pengguna saat ini menginginkan pengalaman yang lebih personal dan efisien. Mereka tidak ingin menghabiskan waktu berjam-jam untuk mencari film yang tepat. Di sinilah peran sistem rekomendasi film menjadi sangat krusial.
 
 Oleh karena itu, sebuah sistem rekomendasi menjadi sebuah kebutuhan yang sangat penting dimana sistem rekomendasi ini dapat menjadi sebuah solusi pada tingginya permintaan akan pengalaman pengguna yang lebih baik dan personal serta menjadi sebuah keunggulan yang kompetitif dalam persaingan platform streaming. 
 
-[Sistem Rekomendasi Film Menggunakan Metode Collaborative Filtering dan K-Nearest Neighbors](https://ejournal.upi.edu/index.php/JATIKOM/article/view/33208/).
+
+Referensi: 
+
+[1] [Agustian, E. R., Munir, D., & Nugroho, E. P. (2020). Sistem Rekomendasi Film Menggunakan Metode Collaborative Filtering dan K-Nearest Neighbors. Jurnal Aplikasi Dan Teori Ilmu Komputer, 3(1), 18–21](https://ejournal.upi.edu/index.php/JATIKOM/article/view/33208/).
 
 ## Business Understanding
 
@@ -26,19 +29,21 @@ Oleh karena itu, sebuah sistem rekomendasi menjadi sebuah kebutuhan yang sangat 
 ## Data Understanding
 Data yang digunakan pada proyek ini diambil dari data The Movie Database (TMDb) yang didapat dari hasil generate The Movie Database API dimana pada dataset ini berisikan tentang 5000 film yang disajikan dalam sebuah dataset format CSV dengan berbagai macam variabel seperti ID film, judul film, cast, crew, dan lain-lain. 
 
-Selain itu, jumlah data yang digunakan pada proyek ini berjumlah 5000 data berupa film-film yang akan diolah dalam membuat sebuah sistem rekomendasi. Kondisi data yang digunakan pada proyek ini masih terlihat noise untuk dilatih dalam model rekomendasi dengan adanya beberapa variabel yang masih memiliki nilai null atau missing value. 
 
 Proyek ini menggunakan 2 dataset sebagai bahan dalam membuat sistem rekomendasi film ini, dimana 2 dataset ini digunakan untuk memprediksi peringkat atau preferensi yang akan diberikan pengguna pada suatu item.
 
-Dataset:
-[TMDB 5000 Movie Dataset](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata/data) & [Data Rating Film](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset?select=ratings_small.csv)  
+Pada dataset TMDB 5000 Movie Dataset, jumlah data yang digunakan pada proyek ini dari dataset tersebut berjumlah 5000 data berupa film-film yang akan diolah dalam membuat sebuah sistem rekomendasi. Kondisi data yang digunakan pada proyek ini masih terlihat noise untuk dilatih dalam model rekomendasi dengan adanya beberapa variabel yang masih memiliki nilai null atau missing value. 
 
-**Variabel-variabel pada dataset pertama adalah sebagai berikut:**
+Sedangkan, pada Dataset Rating Film, jumlah data yang digunakan berkisar 100.000 data rating yang dari 700 pengguna dalam 9000 film. Dataset ini menjadi bahan perbandingan dengan fitur 'id' pada dataset TMDB 5000 Movie Dataset dalam membuat Model dengan Collaborative Filtering. Dataset ini tidak memiliki nilai null atau missing value dari setiap fitur atau variabelnya. 
+
+Dataset:
+[TMDB 5000 Movie Dataset](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata/data) & [Dataset Rating Film](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset?select=ratings_small.csv)  
+
+**Variabel-variabel pada TMDB 5000 Movie Dataset adalah sebagai berikut:**
 - movie_id : merupakan id unik setiap film. 
 - cast : merupakan variabel yang berisi informasi mengenai nama aktor dan karakter yang dimainkan.
+- title: merupakan variabel yang berisi judul-judul film. 
 - crew : merupakan variabel yang berisi informasi mengenai sutradara film, produser, dan kru lainnya. 
-
-**Variabel-variabel pada dataset kedua adalah sebagai berikut:**
 - budget : merupakan anggaran produksi film (dolar AS).
 - genres : merupakan genre film seperti aksi, komedi, horror, dan sebagainya.
 - homepage : merupakan URL halaman web resmi film.
@@ -50,6 +55,12 @@ Dataset:
 - overview: merupakan sinopsis singkat tentang film.
 - popularity : merupakan skor popularitas film. 
 - production_companies : merupakan kumpulan perusahaan yang terlibat dalam pembuatan film. 
+
+**Variabel pada Dataset Rating Film adalah sebagai berikut:**
+- userId : merupakan id unik setiap pengguna.
+- movidId : merupakan id unik setiap film.
+- rating : merupakan kumpulan rating atau penilaian film yang diberikan oleh pengguna dengan skala 0.5 stars - 5.0 stars.
+- timestamp : merupakan variabel yang merepresentasikan detik sejak tengah malam Waktu Universal Terkoordinasi (UTC).
 
 **Exploratory Data Analysis (EDA)**
 
@@ -97,6 +108,7 @@ Dataset:
 
 ## Data Preparation
 
+#### Data Preparation untuk Pelatihan Model Content-Based Filtering:
 - **Membersihkan missing value dan mengecek kembali missing value pada dataset gabungan.**
 
     Melakukan pembersihan missing value pada dataset merupakan suatu tahapan yang diperlukan agar data yang akan dilatih model pada sistem rekomendasi memiliki data yang lengkap dan akurat. Pembersihan missing value ini dilakukan agar tidak akan menimbulkan noise dalam data sehingga model yang akan dilatih dapat fokus pada informasi yang relevan. 
@@ -128,6 +140,12 @@ Dataset:
         crew                    0
         dtype: int64
 
+#### Data Preparation untuk Pelatihan Model Collaborative Filtering:
+- **Menginisialisasi dataframe dari dataset rating.** 
+- **Menyandikan data-data yang ada pada fitur 'userId' dan fitur 'movieId' ke dalam indeks integer.**
+- **Melakukan mapping pada userId dan movieId ke datafram yang berkaitan yaitu 'user' dan 'movie'.** 
+- **Mengecek jumlah user, jumlah movie, nilai minimum rating, dan nilai maksimum rating.** 
+
 ## Modeling
 Pada tahap ini, proyek ini menerapkan 2 model rekomendasi antara lain sebagai berikut:
 
@@ -157,20 +175,20 @@ Pada tahap ini, proyek ini menerapkan 2 model rekomendasi antara lain sebagai be
     **Hasil Rekomendasi**:
 
         # Mendapatkan rekomendasi film yang mirip dengan Spider-Man 3
-        film_recommendations('Spider-Man 3')
+        film_recommendations('The Dark Knight Rises')
 
         Output:
 
-        159                   Spider-Man
-        30                  Spider-Man 2
-        20        The Amazing Spider-Man
-        38      The Amazing Spider-Man 2
-        1318                   The Thing
-        4664                     Bronson
-        1888             Eddie the Eagle
-        1179             I Love You, Man
-        196                     Megamind
-        641                     Due Date
+        65                         The Dark Knight
+        119                          Batman Begins
+        9       Batman v Superman: Dawn of Justice
+        2193                  Secret in Their Eyes
+        1398                             Max Payne
+        979                    Free State of Jones
+        2416                               Beastly
+        2274                              Survivor
+        790                        American Sniper
+        4649                       Shotgun Stories
         Name: title, dtype: object
 
 
@@ -262,7 +280,24 @@ Pada tahap ini, proyek ini menerapkan 2 model rekomendasi antara lain sebagai be
 
 ## Evaluation
 
-Tahap evaluasi metrik pada proyek Sistem Rekomendasi ini menggunakan metrik Root Mean Squared Error (RMSE). 
+### Evaluasi Model Content-Based Filtering
+
+Tahap evaluasi model ini menggunakan metrik presisi (precision metric).
+
+**Penjelasan Metrik Evaluasi**
+Metrik Presisi (Precision Metric) melakukan perbandingan antara rekomendasi film yang relevan dan rekomendasi yang diberikan sistem. Untuk jelasnya, bisa diliat rumus daripada Presisi Sistem Rekomendasi berikut ini:  
+
+![Rumus Presisi](https://github.com/user-attachments/assets/83777201-c68b-45dd-a23d-5dc85e2df07d)
+
+Jika dilihat dari output hasil rekomendasi yang diberikan sistem rekomendasi pada Modeling Content-Based Filtering, dimana 10 film yang direkomendasikan, terdapat 8 film yang similar (mirip) dengan indeks film aslinya ("The Dark Knight Rises"). Jika diformulakan dengan rumus presisi akan mendapatkan hasil sebagai berikut:
+
+    film yang relevan/rekomendasi film yang diberikan sistem = 8/10. 
+
+Presisi yang didapat adalah 80%. 
+
+### Evaluasi Model Collaborative Filtering
+
+Tahap evaluasi model pada proyek Sistem Rekomendasi ini menggunakan metrik Root Mean Squared Error (RMSE). 
 
 **Penjelasan Metrik Evaluasi**
 
@@ -288,6 +323,6 @@ Dimana:
 
 Proses training model cukup smooth dan model konvergen pada epochs sekitar 100. Dari proses ini, dapat diperoleh nilai error akhir sebesar sekitar 0.18 dan error pada data validasi sebesar 0.21. Nilai tersebut cukup bagus untuk sistem rekomendasi dalam memberikan rekomendasi film kepada pengguna. 
 
-**Kesimpulan**
+### Kesimpulan
 
-*Dengan adanya dua pendekatan algoritma dalam membuat sistem rekomendasi yaitu Content-Based Filtering dan Collaborative Filtering dengan menggunakan metrik evaluasi Root Mean Squared Error (RMSE), ini telah menjawab problem statements dan goals yang telah dijabarkan sebelumnya dan membuktikan bahwa dua pendekatan algoritma ini dapat membuat dan mengembangkan sistem rekomendasi film yang mampu memberikan saran film yang relevan dan personal sehingga pengguna mendapatkan kepuasan dan pengalaman yang menyenangkan dalam menonton film. Solution statements ini dapat dibuktikan dengan adanya sistem rekomendasi yang memberikan "Top 10 Movie Recommendation" kepada pengguna.*
+*Dengan adanya dua pendekatan algoritma dalam membuat sistem rekomendasi yaitu Content-Based Filtering dan Collaborative Filtering dengan menggunakan metrik evaluasi Precision dan Root Mean Squared Error (RMSE), ini telah menjawab problem statements dan goals yang telah dijabarkan sebelumnya dan membuktikan bahwa dua pendekatan algoritma ini dapat membuat dan mengembangkan sistem rekomendasi film yang mampu memberikan saran film yang relevan dan personal sehingga pengguna mendapatkan kepuasan dan pengalaman yang menyenangkan dalam menonton film. Solution statements ini dapat dibuktikan dengan adanya sistem rekomendasi yang memberikan "Top 10 Movie Recommendation" kepada pengguna.*
