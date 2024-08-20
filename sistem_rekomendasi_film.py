@@ -63,6 +63,9 @@ tf_matrix = tf.fit_transform(df1['overview'])
 # Menampilkan ukuran matriks tf-idf
 tf_matrix.shape
 
+# Menyimpan matriks tf-idf dalam file pickle
+pickle.dump(tf_matrix, open("tfidf_matrix.pkl", "wb"))
+
 """#### Membuat reverse map dari index dan judul film"""
 
 # Membangun reverse map
