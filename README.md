@@ -351,7 +351,7 @@ Dalam konteks sistem rekomendasi, RMSE digunakan untuk mengukur perbedaan antara
 - Hitung Rata-rata: Hitung rata-rata dari semua kuadrat selisih.
 - Akar Kuadrat: Ambil akar kuadrat dari rata-rata kuadrat selisih. Hasilnya adalah RMSE.
 
-![Rumus RMSE](https://github.com/user-attachments/assets/a6c07ba0-2e0e-4829-b08d-44c34dae4d6b)
+![Rumus RMSE](https://github.com/user-attachments/assets/5acc1927-5d13-478e-ad48-58a2b5c5e2b9)
 
 Dimana: 
 - yi: Rating aktual dari pengguna i untuk item j
