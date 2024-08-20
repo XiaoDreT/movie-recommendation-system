@@ -360,7 +360,7 @@ Dimana:
 
 **Visualisasi Metrik Root Mean Squared Error (RMSE)**
 
-![Metrik RMSE](https://github.com/user-attachments/assets/86d9ee32-80b6-410d-8f1f-d2c0391d8118)
+![Metrik RMSE](https://github.com/user-attachments/assets/5104073c-2a8b-4014-a48f-dea3b4774f80)
 
 Proses training model cukup smooth dan model konvergen pada epochs sekitar 100. Dari proses ini, dapat diperoleh nilai error akhir sebesar sekitar 0.18 dan error pada data validasi sebesar 0.21. Nilai tersebut cukup bagus untuk sistem rekomendasi dalam memberikan rekomendasi film kepada pengguna. 
 
